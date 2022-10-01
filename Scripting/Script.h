@@ -2,6 +2,12 @@
 
 #include <string>
 
+
+namespace CFlat {
+
+	class IBox;
+}
+
 using std::string;
 
 
@@ -14,11 +20,19 @@ using std::string;
 class Script
 {
 
+private:
+	CFlat::IBox* initBox;
+	CFlat::IBox* updateBox;
+
+	void iteration(CFlat::IBox* startingBox);
+
+
+
 public:
 
+	void setupScript(std::string script);
 
-
-	void initialise();
+	void init();
 
 	void update();
 };

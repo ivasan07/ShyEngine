@@ -149,6 +149,7 @@
     <ClInclude Include="CFlat.h" />
     <ClInclude Include="CFlatBasics.h" />
     <ClInclude Include="FlowManager.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="Script.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

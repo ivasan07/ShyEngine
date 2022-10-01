@@ -1,0 +1,60 @@
+{
+  "nodeCount" : 8,
+
+  "input": [
+        {
+            "id" : 0,
+            "type" : "fValue",
+            "value" : 1
+        },
+        {
+            "id" : 1,
+            "type" : "fValue",
+            "value" : 1
+        },
+        {
+            "id" : 2,
+            "type" : "fValue",
+            "value" : 1
+        },
+        {
+            "id" : 3,
+            "type" : "fValue",
+            "value" : 1
+        }
+    ],
+
+    "operator": [
+        {
+            "id" : 4,
+            "type" : "Add",
+            "input" : [
+                0, 1
+            ]
+        },
+        {
+            "id" : 5,
+            "type" : "Subtract",
+            "input" : [
+                2, 3
+            ]
+        },
+        {
+            "id" : 6,
+            "type" : "Mult",
+            "input" : [
+                4, 5
+            ]
+        },
+        {
+            "id" : 7,
+            "type" : "Print",
+            "input" : [
+                6
+            ]
+        }
+    ],
+
+    "init" : 7
+
+}

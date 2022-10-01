@@ -40,6 +40,8 @@ namespace CFlat {
 			std::cout << output->value.intValue;
 			break;
 		}
+
+		//std::cout << std::endl;
 	}
 	Float::Float(float value)
 	{

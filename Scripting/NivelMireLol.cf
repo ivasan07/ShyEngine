@@ -1,0 +1,49 @@
+{
+  "nodeCount" : 6,
+
+  "input": [
+        {
+            "id" : 0,
+            "type" : "fValue",
+            "value" : 13
+        },
+        {
+            "id" : 1,
+            "type" : "fValue",
+            "value" : 24
+        },
+        {
+            "id" : 2,
+            "type" : "fValue",
+            "value" : 0.6666
+        }
+    ],
+
+    "operator": [
+        {
+            "id" : 3,
+            "type" : "Subtract",
+            "input" : [
+                0, 1
+            ]
+        },
+        {
+            "id" : 4,
+            "type" : "Print",
+            "input" : [
+                5
+            ]
+        },
+        {
+            "id" : 5,
+            "type" : "Mult",
+            "input" : [
+                3, 2
+            ]
+        }
+    ],
+    
+    "init" : 4,
+    "update" : -1
+
+}
