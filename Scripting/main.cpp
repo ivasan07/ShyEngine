@@ -1,9 +1,19 @@
 #include <iostream>
 #include "Script.h"
+#include "ScriptAttribute.h"
+
 using CFlat::IBox;
 
 int main()
 {
+	/*
+	*	TODO:
+	*	Variables en cada script
+	*	Encadenar instrucciones 
+	*/
+
+
+
 	Script script{};
 	script.setupScript("NivelMireLol");
 
@@ -13,5 +23,7 @@ int main()
 		script.update();
 		break;
 	}
+
+
 	return 0;
 }
