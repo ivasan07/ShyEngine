@@ -22,21 +22,21 @@
     "operator": [
         {
             "id" : 3,
-            "type" : "Subtract",
+            "type" : 2,
             "input" : [
                 0, 1
             ]
         },
         {
             "id" : 4,
-            "type" : "Print",
+            "type" : 0,
             "input" : [
                 5
             ]
         },
         {
             "id" : 5,
-            "type" : "Mult",
+            "type" : 3,
             "input" : [
                 3, 2
             ]

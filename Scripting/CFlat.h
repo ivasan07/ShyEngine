@@ -50,18 +50,19 @@ namespace CFlat {
 	class IBox {
 
 	protected:
-		IBox();
+		bool clearOutput;
+		void validateInput();
+
+		int operation;
+
+	public:
+		IBox(int operation);
 		~IBox();
 
 
-		std::vector<IBox*> input;
-
-
-		void validateInput();
-		virtual void operation() = 0;
-	public:
 		IBox* nextBox;
 		Output* output;
+		std::vector<IBox*> input;
 
 		void processBox();
 		void addInput(IBox* box);

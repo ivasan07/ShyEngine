@@ -56,25 +56,10 @@ FlowManager::Script* FlowManager::loadScript(string file)
 
 		int id = op["id"].get<int>();
 
-		string type = op["type"].get<std::string>();
+		int type = op["type"].get<int>();
 
-		if (type == "Add") {
-
-			boxes[id] = new CFlat::Add();
-		}
-		else if (type == "Subtract") {
-
-			boxes[id] = new CFlat::Subtract();
-		}
-		else if (type == "Mult") {
-
-			boxes[id] = new CFlat::Multiply();
-		}
-		else if (type == "Print") {
-
-			boxes[id] = new CFlat::Print();
-		}
-
+		boxes[id] = new CFlat::IBox(type);
+		
 		jsonarray operatorInput = op["input"].get<jsonarray>();
 		for (json oi : operatorInput)
 			boxInput[id].push_back(oi.get<int>());

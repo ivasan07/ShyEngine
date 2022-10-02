@@ -1,14 +1,16 @@
 #include "CFlat.h"
-
+#include "OperatorManager.h"
 
 namespace CFlat {
 
 
 
-	IBox::IBox() {
+	IBox::IBox(int op) {
 
+		operation = op;
 		output = nullptr;
 		nextBox = nullptr;
+		clearOutput = true;
 	}
 
 	IBox::~IBox()
@@ -27,14 +29,15 @@ namespace CFlat {
 	void IBox::validateInput()
 	{
 		for (IBox* box : input) {
-			box->processBox();
+			if (box->output == nullptr)
+				box->processBox();
 		}
 	}
 
 	void IBox::processBox()
 	{
 		validateInput();
-		operation();
+		OperatorManager::ProccessOperation(operation, this);
 	}
 
 	void IBox::addInput(IBox* newInput) {

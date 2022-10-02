@@ -142,6 +142,7 @@
     <ClCompile Include="CFlat.cpp" />
     <ClCompile Include="CFlatBasics.cpp" />
     <ClCompile Include="FlowManager.cpp" />
+    <ClCompile Include="OperatorManager.cpp" />
     <ClCompile Include="Script.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ScriptAttribute.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="CFlatBasics.h" />
     <ClInclude Include="FlowManager.h" />
     <ClInclude Include="json.hpp" />
+    <ClInclude Include="OperatorManager.h" />
     <ClInclude Include="Script.h" />
     <ClInclude Include="ScriptAttribute.h" />
   </ItemGroup>
