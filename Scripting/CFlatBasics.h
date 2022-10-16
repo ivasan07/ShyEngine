@@ -1,6 +1,6 @@
 #pragma once
 #include "CFlat.h"
-
+#include <string>
 
 
 namespace CFlat {
@@ -13,5 +13,12 @@ namespace CFlat {
 		Float(float value);
 	};
 
+
+	class String : public IBox {
+
+		std::string value;
+	public:
+		String(std::string value);
+	};
 }
 

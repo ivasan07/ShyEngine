@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-
+#include <string>
 
 namespace CFlat {
 
@@ -41,7 +41,8 @@ namespace CFlat {
 			FloatVector floatVector;
 		};
 
-		
+		std::string message;
+
 		Values value;
 		ParamType type;
 	};

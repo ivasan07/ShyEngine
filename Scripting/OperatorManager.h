@@ -22,21 +22,23 @@ namespace CFlat {
 
 		static void ProccessOperation(int operationIdx, IBox* node);
 
-		struct Math {
+		
+	};
+
+	namespace BoxOperations {
+
+		namespace Math {
 
 			static void Add(IBox* node);
 			static void Subtract(IBox* node);
 			static void Multiply(IBox* node);
 		};
 
-		struct IO {
+		namespace IO {
 			static void Print(IBox* node);
 
 		};
-
-	};
-
-
+	}
 
 }
 

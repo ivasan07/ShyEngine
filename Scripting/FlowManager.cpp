@@ -17,6 +17,8 @@ FlowManager::Script* FlowManager::getBoxes(std::string file)
 
 FlowManager::Script* FlowManager::loadScript(string file)
 {
+	//TODO: codigo defensivo por si algunos nodos no tienen entrada
+	//TODO: hago dos busquedas lo cual esta bastante feo
 	if (scripts.find(file) != scripts.end()) {
 		return getBoxes(file);
 	}
@@ -37,15 +39,22 @@ FlowManager::Script* FlowManager::loadScript(string file)
 
 	jsonarray input = data["input"].get<jsonarray>();
 
-
+	std::vector<std::pair<int, int>> boxLink;
 
 	for (json in : input) {
 
 		int id = in["id"].get<int>();
 
+		//TODO: seguramente sea chulo hacer algo como con los operadores para no tener una cadena enorme de ifs
+
 		if (in["type"].get<string>() == "fValue") {
 
 			boxes[id] = new CFlat::Float(in["value"].get<float>());
+		}
+
+		else if (in["type"].get<string>() == "sValue") {
+
+			boxes[id] = new CFlat::String(in["value"].get<std::string>());
 		}
 	}
 
@@ -58,6 +67,12 @@ FlowManager::Script* FlowManager::loadScript(string file)
 
 		int type = op["type"].get<int>();
 
+		if (op.contains("next")) {
+			int nextBox = op["next"].get<int>();
+			
+			boxLink.push_back(std::make_pair(id, nextBox));
+		}
+
 		boxes[id] = new CFlat::IBox(type);
 		
 		jsonarray operatorInput = op["input"].get<jsonarray>();
@@ -66,7 +81,7 @@ FlowManager::Script* FlowManager::loadScript(string file)
 
 	}
 
-	for (int i = input.size(); i < boxCount; i++) {
+	for (int i = 0; i < boxCount; i++) {
 
 		for (int c = 0; c < boxInput[i].size(); c++) {
 			CFlat::IBox* inputBox = boxes[boxInput[i][c]];
@@ -87,6 +102,13 @@ FlowManager::Script* FlowManager::loadScript(string file)
 		if (updateid >= 0)
 			script->update = boxes[updateid];
 	}
+
+	//Links
+	for (std::pair<int, int> pair : boxLink) {
+
+		boxes[pair.first]->nextBox = boxes[pair.second];
+	}
+
 
 	scripts.emplace(file, script);
 	return script;

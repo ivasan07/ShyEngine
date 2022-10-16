@@ -1,5 +1,5 @@
 {
-  "nodeCount" : 6,
+  "nodeCount" : 8,
 
   "input": [
         {
@@ -13,9 +13,14 @@
             "value" : 24
         },
         {
+            "id" : 7,
+            "type" : "sValue",
+            "value" : "hola nene como estas"
+        },
+        {
             "id" : 2,
             "type" : "fValue",
-            "value" : 0.6666
+            "value" : 26
         }
     ],
 
@@ -32,13 +37,21 @@
             "type" : 0,
             "input" : [
                 5
-            ]
+            ],
+            "next" : 6
         },
         {
             "id" : 5,
             "type" : 3,
             "input" : [
                 3, 2
+            ]
+        },
+        {
+            "id" : 6,
+            "type" : 0,
+            "input" : [
+                7
             ]
         }
     ],

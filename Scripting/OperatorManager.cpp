@@ -6,15 +6,14 @@ CFlat::OperatorManager::Funct CFlat::OperatorManager::operations[CFlat::Operator
 
 void CFlat::OperatorManager::Initialise()
 {
-	operations[Operations::Print] = IO::Print;
-
-	operations[Operations::Add] = Math::Add;
-	operations[Operations::Subtract] = Math::Subtract;
-	operations[Operations::Multiply] = Math::Multiply;
+	operations[Operations::Print] = BoxOperations:: IO::Print;
+	operations[Operations::Add] = BoxOperations::Math::Add;
+	operations[Operations::Subtract] = BoxOperations::Math::Subtract;
+	operations[Operations::Multiply] = BoxOperations::Math::Multiply;
 }
 
 
-void CFlat::OperatorManager::IO::Print(IBox* node)
+void CFlat::BoxOperations::IO::Print(IBox* node)
 {
 	Output* output = node->input[0]->output;
 	switch (output->type) {
@@ -25,7 +24,12 @@ void CFlat::OperatorManager::IO::Print(IBox* node)
 	case ParamType::_int:
 		std::cout << output->value.intValue;
 		break;
+	case ParamType::_string:
+		std::cout << output->message;
+		break;
 	}
+
+	std::cout << std::endl;
 }
 
 
@@ -34,7 +38,7 @@ void CFlat::OperatorManager::ProccessOperation(int operationIdx, IBox* node)
 	operations[operationIdx](node);
 }
 
-void CFlat::OperatorManager::Math::Add(IBox* node)
+void CFlat::BoxOperations::Math::Add(IBox* node)
 {
 	node->output = new Output();
 
@@ -42,7 +46,7 @@ void CFlat::OperatorManager::Math::Add(IBox* node)
 	node->output->value.floatValue = node->input[0]->output->value.floatValue + node->input[1]->output->value.floatValue;
 }
 
-void CFlat::OperatorManager::Math::Subtract(IBox* node)
+void CFlat::BoxOperations::Math::Subtract(IBox* node)
 {
 	node->output = new Output();
 
@@ -50,7 +54,7 @@ void CFlat::OperatorManager::Math::Subtract(IBox* node)
 	node->output->value.floatValue = node->input[0]->output->value.floatValue - node->input[1]->output->value.floatValue;
 }
 
-void CFlat::OperatorManager::Math::Multiply(IBox* node)
+void CFlat::BoxOperations::Math::Multiply(IBox* node)
 {
 	node->output = new Output();
 

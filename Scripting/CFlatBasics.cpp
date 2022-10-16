@@ -13,6 +13,18 @@ namespace CFlat {
 
 		output->value.floatValue = value;
 
-		clearOutput = false;
+		constExpression = true;
+	}
+
+	String::String(std::string value) : IBox(-1)
+	{
+		this->value = value;
+
+		output = new Output();
+		output->type = ParamType::_string;
+
+		output->message = value;
+
+		constExpression = true;
 	}
 }

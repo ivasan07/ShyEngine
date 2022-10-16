@@ -13,6 +13,7 @@ void Script::iteration(CFlat::IBox* iteration)
 
 void Script::setupScript(std::string script)
 {
+    //TODO: el flow manager no deberia estar en el script??? 
     FlowManager manager;
     FlowManager::Script* scriptInputs = manager.loadScript(script);
     initBox = scriptInputs->init;
