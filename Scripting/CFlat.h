@@ -17,7 +17,6 @@ namespace CFlat {
 		_vector3float = 32,
 		_string = 64,
 		_boolean = 128,
-
 	};
 
 
@@ -51,7 +50,7 @@ namespace CFlat {
 	class IBox {
 
 	protected:
-		bool clearOutput;
+		bool constExpression;
 		void validateInput();
 
 		int operation;
