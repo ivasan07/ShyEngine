@@ -6,6 +6,13 @@
 namespace CFlat {
 
 
+	class Split : public IBox {
+
+		IBox* otherRoute;
+	public:
+		Split();
+	};
+
 	class Float : public IBox {
 
 		float value;
@@ -20,5 +27,6 @@ namespace CFlat {
 	public:
 		String(std::string value);
 	};
+
 }
 

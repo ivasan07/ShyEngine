@@ -4,6 +4,13 @@
 
 namespace CFlat {
 
+
+	Split::Split(): IBox(-1)
+	{
+
+		constOutput = false;
+	}
+
 	Float::Float(float value): IBox(-1)
 	{
 		this->value = value;
@@ -13,7 +20,7 @@ namespace CFlat {
 
 		output->value.floatValue = value;
 
-		constExpression = true;
+		constOutput = true;
 	}
 
 	String::String(std::string value) : IBox(-1)
@@ -25,6 +32,7 @@ namespace CFlat {
 
 		output->message = value;
 
-		constExpression = true;
+		constOutput = true;
 	}
+	
 }

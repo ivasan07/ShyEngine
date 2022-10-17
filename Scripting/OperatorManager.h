@@ -9,7 +9,7 @@ namespace CFlat {
 	struct OperatorManager
 	{
 		enum Operations {
-			Print, Add, Subtract, Multiply,
+			Print, Add, Subtract, Multiply, If, Loop,
 
 
 			OperatorCount
@@ -26,6 +26,14 @@ namespace CFlat {
 	};
 
 	namespace BoxOperations {
+
+
+		namespace Logic {
+
+			static void If(Ibox* node);
+			static void Loop(Ibox* node);
+			static void Equals(IBox* node);
+		}
 
 		namespace Math {
 

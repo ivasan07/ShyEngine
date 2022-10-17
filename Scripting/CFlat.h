@@ -19,6 +19,7 @@ namespace CFlat {
 		_boolean = 128,
 	};
 
+	class Ibox;
 
 	struct Output {
 
@@ -38,6 +39,7 @@ namespace CFlat {
 			float floatValue;
 			IntVector intVector;
 			FloatVector floatVector;
+			Ibox* box;
 		};
 
 		std::string message;
@@ -50,7 +52,7 @@ namespace CFlat {
 	class IBox {
 
 	protected:
-		bool constExpression;
+		bool constOutput;
 		void validateInput();
 
 		int operation;

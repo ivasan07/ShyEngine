@@ -4,13 +4,12 @@
 namespace CFlat {
 
 
-
 	IBox::IBox(int op) {
 
 		operation = op;
 		output = nullptr;
 		nextBox = nullptr;
-		clearOutput = true;
+		constOutput = true;
 	}
 
 	IBox::~IBox()
@@ -28,9 +27,14 @@ namespace CFlat {
 
 	void IBox::validateInput()
 	{
+		//TODO en vez de hacer que el ouput se compruebe si es nullptr es mejor hacer que no se este borrando y creando el output
+
 		for (IBox* box : input) {
-			if (box->output == nullptr)
+			if (!constOutput || box->output == nullptr)
+			{
 				box->processBox();
+				constOutput &= box->constOutput;
+			}
 		}
 	}
 

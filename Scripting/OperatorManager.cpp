@@ -10,6 +10,8 @@ void CFlat::OperatorManager::Initialise()
 	operations[Operations::Add] = BoxOperations::Math::Add;
 	operations[Operations::Subtract] = BoxOperations::Math::Subtract;
 	operations[Operations::Multiply] = BoxOperations::Math::Multiply;
+	operations[Operations::If] = BoxOperations::Logic::If;
+	operations[Operations::Loop] = BoxOperations::Logic::Loop;
 }
 
 
@@ -31,6 +33,34 @@ void CFlat::BoxOperations::IO::Print(IBox* node)
 
 	std::cout << std::endl;
 }
+
+
+void CFlat::BoxOperations::Logic::If(IBox* node)
+{
+	
+
+	bool condition = node->input[0]->output->value.boolean;
+
+	if (condition) {
+
+	}
+
+
+
+
+}
+
+void CFlat::BoxOperations::Logic::Loop(IBox* node)
+{
+	
+}
+
+
+void CFlat::BoxOperations::Logic::Equals(IBox* node)
+{
+
+}
+
 
 
 void CFlat::OperatorManager::ProccessOperation(int operationIdx, IBox* node)
