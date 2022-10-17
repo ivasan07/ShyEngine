@@ -1,11 +1,11 @@
 {
-  "nodeCount" : 8,
+  "nodeCount" : 10,
 
   "input": [
         {
             "id" : 0,
             "type" : "fValue",
-            "value" : 13
+            "value" : -109
         },
         {
             "id" : 1,
@@ -38,7 +38,7 @@
             "input" : [
                 5
             ],
-            "next" : 6
+            "next" : 8
         },
         {
             "id" : 5,
@@ -53,7 +53,25 @@
             "input" : [
                 7
             ]
+        },
+        {
+            "id" : 9,
+            "type" : 0,
+            "input" : [
+                0
+            ]
         }
+    ],
+
+    "logic": [
+        {
+            "id": 8,
+            "op": 4,
+            "input": 0,
+            "next": 6,
+            "alter": 9
+        }
+
     ],
     
     "init" : 4,

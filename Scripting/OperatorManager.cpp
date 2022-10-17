@@ -1,5 +1,6 @@
 #include "OperatorManager.h"
 #include "CFlat.h"
+#include "CFlatBasics.h"
 #include <iostream>
 
 CFlat::OperatorManager::Funct CFlat::OperatorManager::operations[CFlat::OperatorManager::OperatorCount];
@@ -37,17 +38,13 @@ void CFlat::BoxOperations::IO::Print(IBox* node)
 
 void CFlat::BoxOperations::Logic::If(IBox* node)
 {
-	
+	//bool condition = node->input[0]->output->value.boolean;
 
-	bool condition = node->input[0]->output->value.boolean;
+	bool condition = node->input[0]->output->value.floatValue > 0;
 
-	if (condition) {
+	Split* split = static_cast<Split*>(node);
 
-	}
-
-
-
-
+	node->nextBox = condition ? node->output->value.box : split->otherRoute;
 }
 
 void CFlat::BoxOperations::Logic::Loop(IBox* node)

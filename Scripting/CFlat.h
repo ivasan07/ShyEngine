@@ -19,7 +19,7 @@ namespace CFlat {
 		_boolean = 128,
 	};
 
-	class Ibox;
+	class IBox;
 
 	struct Output {
 
@@ -39,7 +39,7 @@ namespace CFlat {
 			float floatValue;
 			IntVector intVector;
 			FloatVector floatVector;
-			Ibox* box;
+			IBox* box;
 		};
 
 		std::string message;

@@ -30,8 +30,8 @@ namespace CFlat {
 
 		namespace Logic {
 
-			static void If(Ibox* node);
-			static void Loop(Ibox* node);
+			static void If(IBox* node);
+			static void Loop(IBox* node);
 			static void Equals(IBox* node);
 		}
 

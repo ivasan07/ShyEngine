@@ -5,13 +5,22 @@
 namespace CFlat {
 
 
-	Split::Split(): IBox(-1)
+	Split::Split(int op) : IBox(op)
 	{
-
 		constOutput = false;
+		otherRoute = nullptr;
 	}
 
-	Float::Float(float value): IBox(-1)
+	void Split::setOtherRoute(IBox* o)
+	{
+		output = new Output();
+		output->type = ParamType::_box;
+		output->value.box = nextBox;
+		otherRoute = o;
+	}
+
+
+	Float::Float(float value) : IBox(-1)
 	{
 		this->value = value;
 
@@ -34,5 +43,5 @@ namespace CFlat {
 
 		constOutput = true;
 	}
-	
+
 }

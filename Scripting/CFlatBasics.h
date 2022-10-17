@@ -8,9 +8,10 @@ namespace CFlat {
 
 	class Split : public IBox {
 
-		IBox* otherRoute;
 	public:
-		Split();
+		Split(int op);
+		IBox* otherRoute;
+		void setOtherRoute(IBox*);
 	};
 
 	class Float : public IBox {
