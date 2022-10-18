@@ -9,7 +9,10 @@ namespace CFlat {
 	struct OperatorManager
 	{
 		enum Operations {
-			Print, Add, Subtract, Multiply, If, Loop,
+			Print, If, Loop,
+			
+			//Math operations
+			Add, Subtract, Multiply, Division, Power, SquareRoot, Mod,
 
 
 			OperatorCount
@@ -40,6 +43,10 @@ namespace CFlat {
 			void Add(IBox* node);
 			void Subtract(IBox* node);
 			void Multiply(IBox* node);
+			void Division(IBox* node);
+			void Power(IBox* node);
+			void SquareRoot(IBox* node);
+			void Mod(IBox* node);
 		};
 
 		namespace IO {

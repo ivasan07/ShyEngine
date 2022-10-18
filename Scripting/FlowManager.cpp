@@ -46,16 +46,22 @@ FlowManager::Script* FlowManager::loadScript(string file)
 
 		int id = in["id"].get<int>();
 
-		//TODO: seguramente sea chulo hacer algo como con los operadores para no tener una cadena enorme de ifs
+		switch (in["type"].get<std::string>()[0]) {
 
-		if (in["type"].get<string>() == "fValue") {
+		case 'f':
 
 			boxes[id] = CFlat::Attributes::createFloat(in["value"].get<float>());
-		}
+			break;
 
-		else if (in["type"].get<string>() == "sValue") {
+		case 'i':
+
+			boxes[id] = CFlat::Attributes::createInt(in["value"].get<int>());
+			break;
+
+		case 's':
 
 			boxes[id] = CFlat::Attributes::createString(in["value"].get<std::string>());
+			break;
 		}
 	}
 
@@ -126,14 +132,14 @@ FlowManager::Script* FlowManager::loadScript(string file)
 
 	//Links
 	for (std::pair<int, int> pair : boxLink) {
-
+		if(pair.second >= 0)
 		boxes[pair.first]->nextBox = boxes[pair.second];
 	}
 
 	for (std::pair<int, int> pair : boxSplit) {
 
 		CFlat::Split* split = static_cast<CFlat::Split*>(boxes[pair.first]);
-		CFlat::IBox* alternativeBox = pair.second > 0 ? boxes[pair.second] : nullptr;
+		CFlat::IBox* alternativeBox = pair.second >= 0 ? boxes[pair.second] : nullptr;
 		split->setOtherRoute(alternativeBox);
 	}
 

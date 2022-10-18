@@ -2,12 +2,13 @@
 #include "CFlat.h"
 #include "CFlatBasics.h"
 #include <iostream>
+#include <math.h>
 
 CFlat::OperatorManager::Funct CFlat::OperatorManager::operations[CFlat::OperatorManager::OperatorCount];
 
 void CFlat::OperatorManager::Initialise()
 {
-	operations[Operations::Print] = BoxOperations:: IO::Print;
+	operations[Operations::Print] = BoxOperations::IO::Print;
 	operations[Operations::Add] = BoxOperations::Math::Add;
 	operations[Operations::Subtract] = BoxOperations::Math::Subtract;
 	operations[Operations::Multiply] = BoxOperations::Math::Multiply;
@@ -50,7 +51,32 @@ void CFlat::BoxOperations::Logic::If(IBox* node)
 
 void CFlat::BoxOperations::Logic::Loop(IBox* node)
 {
-	
+	CFlat::Split* split = static_cast<CFlat::Split*>(node);
+	CFlat::IBox* conditionNode = node->input[0];
+
+	bool range = false;
+	if (conditionNode->output.type == ParamType::_int) {
+
+		range = true;
+	}
+
+	int n = 0;
+	while ((range && n < conditionNode->output.value.intValue) || (!range && conditionNode->output.value.boolean)) {
+
+		CFlat::IBox* box = split->otherRoute;
+
+		while (box != nullptr) {
+
+			box->processBox();
+			box = box->nextBox;
+		}
+
+		if (!range)
+			conditionNode->processBox();
+
+		n++;
+	}
+
 }
 
 
@@ -58,7 +84,6 @@ void CFlat::BoxOperations::Logic::Equals(IBox* node)
 {
 
 }
-
 
 
 void CFlat::OperatorManager::ProccessOperation(int operationIdx, IBox* node)
@@ -83,3 +108,34 @@ void CFlat::BoxOperations::Math::Multiply(IBox* node)
 	node->output.type = ParamType::_float;
 	node->output.value.floatValue = node->input[0]->output.value.floatValue * node->input[1]->output.value.floatValue;
 }
+
+
+void CFlat::BoxOperations::Math::Division(IBox* node)
+{
+	node->output.type = ParamType::_float;
+	node->output.value.floatValue = node->input[0]->output.value.floatValue / node->input[1]->output.value.floatValue;
+}
+
+
+void CFlat::BoxOperations::Math::Power(IBox* node)
+{
+	node->output.type = ParamType::_float;
+	node->output.value.floatValue = powf(node->input[0]->output.value.floatValue, node->input[1]->output.value.floatValue);
+}
+
+
+
+void CFlat::BoxOperations::Math::SquareRoot(IBox* node)
+{
+	node->output.type = ParamType::_float;
+	node->output.value.floatValue = sqrtf(node->input[0]->output.value.floatValue);
+}
+
+
+
+void CFlat::BoxOperations::Math::Mod(IBox* node)
+{
+	node->output.type = ParamType::_float;
+	node->output.value.floatValue = node->input[0]->output.value.floatValue * node->input[1]->output.value.floatValue;
+}
+

@@ -25,6 +25,5 @@ namespace CFlat {
 		IBox* createInt(int value);
 		IBox* createString(std::string value);
 	}
-
 }
 

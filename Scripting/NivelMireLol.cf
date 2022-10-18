@@ -1,33 +1,38 @@
 {
-  "nodeCount" : 10,
+  "nodeCount" : 12,
 
   "input": [
         {
             "id" : 0,
-            "type" : "fValue",
+            "type" : "f",
             "value" : -45
         },
         {
             "id" : 1,
-            "type" : "fValue",
+            "type" : "f",
             "value" : 24
         },
         {
             "id" : 7,
-            "type" : "sValue",
+            "type" : "s",
             "value" : "hola nene como estas"
         },
         {
             "id" : 2,
-            "type" : "fValue",
+            "type" : "f",
             "value" : 26
+        },
+        {
+            "id" : 11,
+            "type" : "i",
+            "value" : 10
         }
     ],
 
     "operator": [
         {
             "id" : 3,
-            "type" : 2,
+            "type" : 4,
             "input" : [
                 0, 1
             ]
@@ -59,18 +64,28 @@
             "type" : 0,
             "input" : [
                 0
-            ]
+            ],
+            "next" : 10
         }
     ],
 
     "logic": [
         {
             "id": 8,
-            "op": 4,
+            "op": 1,
             "input": 0,
             "next": 6,
             "alter": 9
+        },
+
+        {
+            "id": 10,
+            "op": 2,
+            "input": 11,
+            "next": -1,
+            "alter": 6
         }
+
 
     ],
     
