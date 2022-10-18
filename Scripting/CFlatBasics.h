@@ -5,6 +5,7 @@
 
 namespace CFlat {
 
+	//TODO no tiene que haber una clase float ni nada asi
 
 	class Split : public IBox {
 
@@ -14,20 +15,16 @@ namespace CFlat {
 		void setOtherRoute(IBox*);
 	};
 
-	class Float : public IBox {
-
-		float value;
-	public:
-		Float(float value);
-	};
 
 
-	class String : public IBox {
 
-		std::string value;
-	public:
-		String(std::string value);
-	};
+	namespace Attributes {
+
+		IBox* createAttribute(ParamType type);
+		IBox* createFloat(float value);
+		IBox* createInt(int value);
+		IBox* createString(std::string value);
+	}
 
 }
 

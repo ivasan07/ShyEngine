@@ -8,7 +8,7 @@ namespace CFlat {
 
 	enum class ParamType {
 
-		_box = 0,
+		_null = 0,
 		_int = 1,
 		_float = 2,
 		_vector2int = 4,
@@ -17,6 +17,7 @@ namespace CFlat {
 		_vector3float = 32,
 		_string = 64,
 		_boolean = 128,
+		_box = 256
 	};
 
 	class IBox;
@@ -52,7 +53,6 @@ namespace CFlat {
 	class IBox {
 
 	protected:
-		bool constOutput;
 		void validateInput();
 
 		int operation;
@@ -61,9 +61,10 @@ namespace CFlat {
 		IBox(int operation);
 		~IBox();
 
+		bool constOutput;
 
 		IBox* nextBox;
-		Output* output;
+		Output output;
 		std::vector<IBox*> input;
 
 		void processBox();

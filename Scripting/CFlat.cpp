@@ -7,9 +7,10 @@ namespace CFlat {
 	IBox::IBox(int op) {
 
 		operation = op;
-		output = nullptr;
 		nextBox = nullptr;
 		constOutput = true;
+
+		output.type = ParamType::_null;
 	}
 
 	IBox::~IBox()
@@ -18,10 +19,6 @@ namespace CFlat {
 			delete in;
 		}
 		input.clear();
-
-		if (output != nullptr)
-			delete output;
-
 		nextBox = nullptr;
 	}
 
@@ -30,7 +27,7 @@ namespace CFlat {
 		//TODO en vez de hacer que el ouput se compruebe si es nullptr es mejor hacer que no se este borrando y creando el output
 
 		for (IBox* box : input) {
-			if (!box->constOutput || box->output == nullptr)
+			if (!box->constOutput || box->output.type == ParamType::_null)
 			{
 				box->processBox();
 				constOutput &= box->constOutput;

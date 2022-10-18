@@ -30,20 +30,20 @@ namespace CFlat {
 
 		namespace Logic {
 
-			static void If(IBox* node);
-			static void Loop(IBox* node);
-			static void Equals(IBox* node);
+			void If(IBox* node);
+			void Loop(IBox* node);
+			void Equals(IBox* node);
 		}
 
 		namespace Math {
 
-			static void Add(IBox* node);
-			static void Subtract(IBox* node);
-			static void Multiply(IBox* node);
+			void Add(IBox* node);
+			void Subtract(IBox* node);
+			void Multiply(IBox* node);
 		};
 
 		namespace IO {
-			static void Print(IBox* node);
+			void Print(IBox* node);
 
 		};
 	}

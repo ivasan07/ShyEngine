@@ -50,12 +50,12 @@ FlowManager::Script* FlowManager::loadScript(string file)
 
 		if (in["type"].get<string>() == "fValue") {
 
-			boxes[id] = new CFlat::Float(in["value"].get<float>());
+			boxes[id] = CFlat::Attributes::createFloat(in["value"].get<float>());
 		}
 
 		else if (in["type"].get<string>() == "sValue") {
 
-			boxes[id] = new CFlat::String(in["value"].get<std::string>());
+			boxes[id] = CFlat::Attributes::createString(in["value"].get<std::string>());
 		}
 	}
 

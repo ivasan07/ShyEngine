@@ -18,17 +18,17 @@ void CFlat::OperatorManager::Initialise()
 
 void CFlat::BoxOperations::IO::Print(IBox* node)
 {
-	Output* output = node->input[0]->output;
-	switch (output->type) {
+	Output output = node->input[0]->output;
+	switch (output.type) {
 	case ParamType::_float:
-		std::cout << output->value.floatValue;
+		std::cout << output.value.floatValue;
 		break;
 
 	case ParamType::_int:
-		std::cout << output->value.intValue;
+		std::cout << output.value.intValue;
 		break;
 	case ParamType::_string:
-		std::cout << output->message;
+		std::cout << output.message;
 		break;
 	}
 
@@ -38,13 +38,14 @@ void CFlat::BoxOperations::IO::Print(IBox* node)
 
 void CFlat::BoxOperations::Logic::If(IBox* node)
 {
-	//bool condition = node->input[0]->output->value.boolean;
+	//TODO hacer bien la condicion del if
+	//bool condition = node->input[0]->output.value.boolean;
 
-	bool condition = node->input[0]->output->value.floatValue > 0;
+	bool condition = node->input[0]->output.value.floatValue > 0;
 
 	Split* split = static_cast<Split*>(node);
 
-	node->nextBox = condition ? node->output->value.box : split->otherRoute;
+	node->nextBox = condition ? node->output.value.box : split->otherRoute;
 }
 
 void CFlat::BoxOperations::Logic::Loop(IBox* node)
@@ -67,24 +68,18 @@ void CFlat::OperatorManager::ProccessOperation(int operationIdx, IBox* node)
 
 void CFlat::BoxOperations::Math::Add(IBox* node)
 {
-	node->output = new Output();
-
-	node->output->type = ParamType::_float;
-	node->output->value.floatValue = node->input[0]->output->value.floatValue + node->input[1]->output->value.floatValue;
+	node->output.type = ParamType::_float;
+	node->output.value.floatValue = node->input[0]->output.value.floatValue + node->input[1]->output.value.floatValue;
 }
 
 void CFlat::BoxOperations::Math::Subtract(IBox* node)
 {
-	node->output = new Output();
-
-	node->output->type = ParamType::_float;
-	node->output->value.floatValue = node->input[0]->output->value.floatValue - node->input[1]->output->value.floatValue;
+	node->output.type = ParamType::_float;
+	node->output.value.floatValue = node->input[0]->output.value.floatValue - node->input[1]->output.value.floatValue;
 }
 
 void CFlat::BoxOperations::Math::Multiply(IBox* node)
 {
-	node->output = new Output();
-
-	node->output->type = ParamType::_float;
-	node->output->value.floatValue = node->input[0]->output->value.floatValue * node->input[1]->output->value.floatValue;
+	node->output.type = ParamType::_float;
+	node->output.value.floatValue = node->input[0]->output.value.floatValue * node->input[1]->output.value.floatValue;
 }
