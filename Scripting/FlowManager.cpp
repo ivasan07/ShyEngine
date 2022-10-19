@@ -97,14 +97,14 @@ FlowManager::Script* FlowManager::loadScript(string file)
 		int input = cond["input"].get<int>();
 		boxInput[id].push_back(input);
 
-		int op = cond["op"].get<int>();
+		int type = cond["type"].get<int>();
 
 		if (cond.contains("next"))
 			boxLink.push_back(std::make_pair(id, cond["next"].get<int>()));
 
 		int alternativeBox = cond.contains("alter") ? cond["alter"].get<int>() : -1;
 		boxSplit.push_back(std::make_pair(id, alternativeBox));
-		boxes[id] = new CFlat::Split(op);
+		boxes[id] = new CFlat::Split(type);
 	}
 
 

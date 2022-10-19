@@ -1,60 +1,44 @@
 {
-  "nodeCount" : 8,
-
+  "nodeCount": 4,
+  "init": 3,
+  "logic": [],
   "input": [
-        {
-            "id" : 0,
-            "type" : "fValue",
-            "value" : 1
-        },
-        {
-            "id" : 1,
-            "type" : "fValue",
-            "value" : 1
-        },
-        {
-            "id" : 2,
-            "type" : "fValue",
-            "value" : 1
-        },
-        {
-            "id" : 3,
-            "type" : "fValue",
-            "value" : 1
-        }
-    ],
-
-    "operator": [
-        {
-            "id" : 4,
-            "type" : "Add",
-            "input" : [
-                0, 1
-            ]
-        },
-        {
-            "id" : 5,
-            "type" : "Subtract",
-            "input" : [
-                2, 3
-            ]
-        },
-        {
-            "id" : 6,
-            "type" : "Mult",
-            "input" : [
-                4, 5
-            ]
-        },
-        {
-            "id" : 7,
-            "type" : "Print",
-            "input" : [
-                6
-            ]
-        }
-    ],
-
-    "init" : 7
-
+    {
+      "id": 0,
+      "type": "f",
+      "next": -1,
+      "alter": 0,
+      "input": [],
+      "value": 2
+    },
+    {
+      "id": 1,
+      "type": "f",
+      "next": -1,
+      "alter": 0,
+      "input": [],
+      "value": 3
+    }
+  ],
+  "operator": [
+    {
+      "id": 2,
+      "type": 3,
+      "next": -1,
+      "alter": 0,
+      "input": [
+        0,
+        1
+      ]
+    },
+    {
+      "id": 3,
+      "type": 0,
+      "next": -1,
+      "alter": 0,
+      "input": [
+        2
+      ]
+    }
+  ]
 }

@@ -34,7 +34,7 @@ int main() {
 	CFlat::OperatorManager::Initialise();
 
 	Script script{};
-	script.setupScript("NivelMireLol");
+	script.setupScript("MyScript");
 
 
 	script.init();
