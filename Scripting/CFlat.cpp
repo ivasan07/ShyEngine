@@ -24,8 +24,6 @@ namespace CFlat {
 
 	void IBox::validateInput()
 	{
-		//TODO en vez de hacer que el ouput se compruebe si es nullptr es mejor hacer que no se este borrando y creando el output
-
 		for (IBox* box : input) {
 			if (!box->constOutput || box->output.type == ParamType::_null)
 			{

@@ -17,6 +17,7 @@ class ScriptAttribute
 			+string
 	*/
 
+	//TODO: hacer variables privadas o publicas
 
 	std::unordered_map<string, bool> booleans;
 	std::unordered_map<string, int> integers;
@@ -31,6 +32,11 @@ public:
 	void generateAttribute(string name, int value);
 	void generateAttribute(string name, float value);
 	void generateAttribute(string name, string value);
+
+	void updateAttribute(string name, bool value);
+	void updateAttribute(string name, int value);
+	void updateAttribute(string name, float value);
+	void updateAttribute(string name, string value);
 
 	void retreiveAttribute(string name, bool& value);
 	void retreiveAttribute(string name, int& value);

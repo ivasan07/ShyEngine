@@ -7,28 +7,37 @@ namespace CFlat {
 	class IBox;
 }
 
+class Script;
+
 using std::string;
 
-class FlowManager
-{
-public:
-	struct Script{
+namespace CFlat {
 
-		CFlat::IBox* init;
-		CFlat::IBox* update;
+	class FlowManager
+	{
+	public:
+		struct ScriptInfo {
+
+			CFlat::IBox* init;
+			CFlat::IBox* update;
+		};
+
+		static FlowManager* instance;
+
+	private:
+
+
+		const string fileExtension = ".cf";
+		const string path = "./";
+
+		std::vector<CFlat::IBox*> boxes;
+		std::unordered_map <string, ScriptInfo* > scripts;
+	public:
+
+		FlowManager();
+
+		FlowManager::ScriptInfo* getBoxes(std::string file);
+		FlowManager::ScriptInfo* loadScript(string file, Script* script);
 	};
 
-private:
-
-
-	const string fileExtension = ".cf";
-	const string path = "./";
-
-	std::vector<CFlat::IBox*> boxes;
-	std::unordered_map <string, Script* > scripts;
-public:
-
-	FlowManager::Script* getBoxes(std::string file);
-	FlowManager::Script* loadScript(string file);
-};
-
+}

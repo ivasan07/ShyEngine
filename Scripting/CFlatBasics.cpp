@@ -25,6 +25,13 @@ CFlat::IBox* CFlat::Attributes::createInt(int value) {
 	return box;
 }
 
+CFlat::IBox* CFlat::Attributes::createBoolean(int value) {
+
+	CFlat::IBox* box = createAttribute(ParamType::_boolean);
+	box->output.value.boolean = value != 0;
+	return box;
+}
+
 CFlat::IBox* CFlat::Attributes::createString(std::string value)
 {
 	CFlat::IBox* box = CFlat::Attributes::createAttribute(CFlat::ParamType::_string);

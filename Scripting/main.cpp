@@ -3,6 +3,7 @@
 #include "ScriptAttribute.h"
 #include "OperatorManager.h"
 
+#include "FlowManager.h"
 
 using CFlat::IBox;
 
@@ -32,16 +33,19 @@ int main() {
 	*/
 
 	CFlat::OperatorManager::Initialise();
+	CFlat::FlowManager flowManager;
 
 	Script script{};
 	script.setupScript("MyScript");
-
-
 	script.init();
+
 	std::cout << "\n== update ==\n";
-	while (true) {
+
+	int cont = 0;
+	int iterationCount = 10;
+	while (cont < iterationCount) {
 		script.update();
-		break;
+		cont++;
 	}
 
 

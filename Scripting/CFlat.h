@@ -3,8 +3,9 @@
 #include <vector>
 #include <string>
 
-namespace CFlat {
+class Script;
 
+namespace CFlat {
 
 	enum class ParamType {
 
@@ -66,6 +67,9 @@ namespace CFlat {
 		IBox* nextBox;
 		Output output;
 		std::vector<IBox*> input;
+
+
+		Script* script;
 
 		void processBox();
 		void addInput(IBox* box);

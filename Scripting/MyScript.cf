@@ -1,43 +1,78 @@
 {
-  "nodeCount": 4,
-  "init": 3,
+  "nodeCount": 7,
+  "init": 0,
+  "update": 0,
   "logic": [],
+  "attributes":{
+    "integer": [
+      {
+        "name": "num",
+        "value": 0
+      }
+    ]
+  },
   "input": [
     {
-      "id": 0,
-      "type": "f",
+      "id": 5,
+      "type": "s",
       "next": -1,
       "alter": 0,
       "input": [],
-      "value": 2
+      "value": "el numero es: "
     },
     {
-      "id": 1,
-      "type": "f",
+      "id": 6,
+      "type": "s",
       "next": -1,
       "alter": 0,
       "input": [],
-      "value": 3
+      "value": "num"
     }
   ],
   "operator": [
     {
+      "id": 0,
+      "type": 0,
+      "next": 1,
+      "alter": 0,
+      "input": [
+        5
+      ]
+    },
+    {
+      "id": 1,
+      "type": 0,
+      "next": 4,
+      "alter": 0,
+      "input": [
+        3
+      ]
+    },
+    {
       "id": 2,
-      "type": 3,
+      "type": 20,
       "next": -1,
       "alter": 0,
       "input": [
-        0,
-        1
+        6
       ]
     },
     {
       "id": 3,
-      "type": 0,
+      "type": 10,
       "next": -1,
       "alter": 0,
       "input": [
         2
+      ]
+    },
+    {
+      "id": 4,
+      "type": 21,
+      "next": -1,
+      "alter": 0,
+      "input": [
+        6, 3
       ]
     }
   ]

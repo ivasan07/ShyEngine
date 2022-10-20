@@ -3,148 +3,259 @@
 #include "json.hpp"
 #include <iostream>
 #include "CFlatBasics.h"
+#include "Script.h"
 
 using nlohmann::json;
 using std::string;
 using jsonarray = std::vector<json>;
 
 
+CFlat::FlowManager* CFlat::FlowManager::instance;
 
-FlowManager::Script* FlowManager::getBoxes(std::string file)
-{
-	return scripts.find(file)->second;
+namespace CFlat {
+
+	FlowManager::FlowManager()
+	{
+		instance = this;
+	}
+	FlowManager::ScriptInfo* FlowManager::getBoxes(std::string file)
+	{
+		return scripts.find(file)->second;
+	}
+
+	FlowManager::ScriptInfo* FlowManager::loadScript(string file, Script* script)
+	{
+		//TODO: separar este metodo que es un poco enorme en cachitos mas aceptables
+		
+
+		//Antes de inicializar el script comprobamos que no exista de antes
+		{
+			auto search = scripts.find(file);
+			if (search != scripts.end()) {
+				return search->second;
+			}
+		}
+
+		//TODO manejo de error -> fichero script no existe
+		//Si el archivo no existe retornamos y se hace el manejo de errores
+		std::ifstream f(path + file + fileExtension);
+		if (!f.good()) {
+
+			std::cout << "El archivo no existe";
+			return nullptr;
+		}
+
+		json data = json::parse(f);
+
+		int boxCount = data["nodeCount"].get<int>();
+
+		boxes = std::vector<CFlat::IBox*>(boxCount);
+
+		/*
+		* Vectores temporales con todas los inputs, enlaces y divisiones
+		* Una vez se hayan creado todas las cajas se establecen los punteros de las cajas
+		**/
+
+		std::vector<std::vector<int>> boxInput(boxCount);
+		std::vector<std::pair<int, int>> boxLink;
+		std::vector<std::pair<int, int>> boxSplit;
+
+		/*
+		* Nota:
+		* El vector de input se procesa de forma diferente:
+		* Es un vector de vectores, siendo el indice del primer vector el indice del vector al cual le corresponde un vector de input
+		*/
+
+
+		/*
+		* Se dividen los nodos entre : input, operadores y logica, pues se leen y procesan de forma diferente
+		*/
+
+
+		/*
+		* Input contiene todas las variables constantes del programa
+		*/
+
+		if (data.contains("input")) {
+
+			jsonarray input = data["input"].get<jsonarray>();
+			for (json in : input) {
+
+				int id = in["id"].get<int>();
+
+				switch (in["type"].get<std::string>()[0]) {
+
+				case 'f':
+
+					boxes[id] = CFlat::Attributes::createFloat(in["value"].get<float>());
+					break;
+
+				case 'i':
+
+					boxes[id] = CFlat::Attributes::createInt(in["value"].get<int>());
+					break;
+
+				case 's':
+
+					boxes[id] = CFlat::Attributes::createString(in["value"].get<std::string>());
+					break;
+				}
+			}
+		}
+
+		/*
+		*  Operators contiene todas las operaciones y funcionalidad del codigo
+		*/
+		if (data.contains("operator")) {
+			jsonarray operators = data["operator"].get<jsonarray>();
+
+			for (json op : operators) {
+
+				int id = op["id"].get<int>();
+
+				int type = op["type"].get<int>();
+
+				if (op.contains("next")) {
+					int nextBox = op["next"].get<int>();
+
+					boxLink.push_back(std::make_pair(id, nextBox));
+				}
+
+				if (op.contains("input")) {
+					jsonarray operatorInput = op["input"].get<jsonarray>();
+					for (json oi : operatorInput)
+						boxInput[id].push_back(oi.get<int>());
+				}
+
+				boxes[id] = new CFlat::IBox(type);
+			}
+		}
+
+		/*
+		*  La logica consiste en condicionales y bucles
+		*/
+		if (data.contains("logic")) {
+			jsonarray logic = data["logic"].get<jsonarray>();
+
+
+			for (json cond : logic) {
+
+				int id = cond["id"].get<int>();
+
+				int input = cond["input"].get<int>();
+				boxInput[id].push_back(input);
+
+				int type = cond["type"].get<int>();
+
+				if (cond.contains("next"))
+					boxLink.push_back(std::make_pair(id, cond["next"].get<int>()));
+
+				int alternativeBox = cond.contains("alter") ? cond["alter"].get<int>() : -1;
+				boxSplit.push_back(std::make_pair(id, alternativeBox));
+				boxes[id] = new CFlat::Split(type);
+			}
+		}
+		/*
+		*	Atributos y variables del script
+		*/
+		if (data.contains("attributes")) {
+
+			json attributes = data["attributes"].get<json>();
+
+			
+			if (attributes.contains("integer")) {
+				jsonarray integer = attributes["integer"].get<jsonarray>();
+
+				for (json i : integer) {
+
+					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<int>());
+				}
+			}
+
+			if (attributes.contains("decimal")) {
+				jsonarray integer = attributes["decimal"].get<jsonarray>();
+
+				for (json i : integer) {
+
+					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<float>());
+				}
+			}
+
+			if (attributes.contains("boolean")) {
+				jsonarray integer = attributes["boolean"].get<jsonarray>();
+
+				for (json i : integer) {
+
+					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<bool>());
+				}
+			}
+
+			if (attributes.contains("string")) {
+				jsonarray integer = attributes["string"].get<jsonarray>();
+
+				for (json i : integer) {
+
+					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<std::string>());
+				}
+			}
+		}
+
+		/*
+		*  Se establecen todos los inputs
+		*/
+		for (int i = 0; i < boxCount; i++) {
+
+			for (int c = 0; c < boxInput[i].size(); c++) {
+				CFlat::IBox* inputBox = boxes[boxInput[i][c]];
+				boxes[i]->addInput(inputBox);
+			}
+		}
+
+		//Links
+		for (std::pair<int, int> pair : boxLink) {
+			if (pair.second >= 0)
+				boxes[pair.first]->nextBox = boxes[pair.second];
+		}
+
+		//Splits
+		for (std::pair<int, int> pair : boxSplit) {
+
+			CFlat::Split* split = static_cast<CFlat::Split*>(boxes[pair.first]);
+			CFlat::IBox* alternativeBox = pair.second >= 0 ? boxes[pair.second] : nullptr;
+			split->setOtherRoute(alternativeBox);
+		}
+
+
+		//Establecer a cada nodo una referencia al script
+		for (CFlat::IBox* box : boxes) {
+
+			if (box != nullptr)
+				box->script = script;
+		}
+
+
+		//TODO: en vez de crear un script info, rellenar el script aqui dentro
+		/*
+		*  Lectura de los puntos de entrada en el programa
+		*/
+		ScriptInfo* scriptInfo = new ScriptInfo{ nullptr, nullptr };
+
+		if (data.contains("init")) {
+			int initid = data["init"].get<int>();
+			if (initid >= 0)
+				scriptInfo->init = boxes[initid];
+		}
+
+		if (data.contains("update")) {
+			int updateid = data["update"].get<int>();
+			if (updateid >= 0)
+				scriptInfo->update = boxes[updateid];
+		}
+
+
+
+		scripts.emplace(file, scriptInfo);
+		return scriptInfo;
+	}
+
 }
-
-FlowManager::Script* FlowManager::loadScript(string file)
-{
-	//TODO: codigo defensivo por si algunos nodos no tienen entrada
-	//TODO: hago dos busquedas lo cual esta bastante feo
-	if (scripts.find(file) != scripts.end()) {
-		return getBoxes(file);
-	}
-
-	std::ifstream f(path + file + fileExtension);
-	if (!f.good()) {
-
-		std::cout << "El archivo no existe";
-		return nullptr;
-	}
-
-	json data = json::parse(f);
-
-	int boxCount = data["nodeCount"].get<int>();
-
-	boxes = std::vector<CFlat::IBox*>(boxCount);
-	std::vector<std::vector<int>> boxInput(boxCount);
-
-	jsonarray input = data["input"].get<jsonarray>();
-
-	std::vector<std::pair<int, int>> boxLink;
-	std::vector<std::pair<int, int>> boxSplit;
-
-	for (json in : input) {
-
-		int id = in["id"].get<int>();
-
-		switch (in["type"].get<std::string>()[0]) {
-
-		case 'f':
-
-			boxes[id] = CFlat::Attributes::createFloat(in["value"].get<float>());
-			break;
-
-		case 'i':
-
-			boxes[id] = CFlat::Attributes::createInt(in["value"].get<int>());
-			break;
-
-		case 's':
-
-			boxes[id] = CFlat::Attributes::createString(in["value"].get<std::string>());
-			break;
-		}
-	}
-
-	jsonarray operators = data["operator"].get<jsonarray>();
-
-	for (json op : operators) {
-
-		int id = op["id"].get<int>();
-
-		int type = op["type"].get<int>();
-
-		if (op.contains("next")) {
-			int nextBox = op["next"].get<int>();
-
-			boxLink.push_back(std::make_pair(id, nextBox));
-		}
-
-		boxes[id] = new CFlat::IBox(type);
-
-		jsonarray operatorInput = op["input"].get<jsonarray>();
-		for (json oi : operatorInput)
-			boxInput[id].push_back(oi.get<int>());
-
-	}
-
-
-	jsonarray logic = data["logic"].get<jsonarray>();
-
-	for (json cond : logic) {
-
-		int id = cond["id"].get<int>();
-
-		int input = cond["input"].get<int>();
-		boxInput[id].push_back(input);
-
-		int type = cond["type"].get<int>();
-
-		if (cond.contains("next"))
-			boxLink.push_back(std::make_pair(id, cond["next"].get<int>()));
-
-		int alternativeBox = cond.contains("alter") ? cond["alter"].get<int>() : -1;
-		boxSplit.push_back(std::make_pair(id, alternativeBox));
-		boxes[id] = new CFlat::Split(type);
-	}
-
-
-	for (int i = 0; i < boxCount; i++) {
-
-		for (int c = 0; c < boxInput[i].size(); c++) {
-			CFlat::IBox* inputBox = boxes[boxInput[i][c]];
-			boxes[i]->addInput(inputBox);
-		}
-	}
-
-	Script* script = new Script{ nullptr, nullptr };
-
-	if (data.contains("init")) {
-		int initid = data["init"].get<int>();
-		if (initid >= 0)
-			script->init = boxes[initid];
-	}
-
-	if (data.contains("update")) {
-		int updateid = data["update"].get<int>();
-		if (updateid >= 0)
-			script->update = boxes[updateid];
-	}
-
-	//Links
-	for (std::pair<int, int> pair : boxLink) {
-		if(pair.second >= 0)
-		boxes[pair.first]->nextBox = boxes[pair.second];
-	}
-
-	for (std::pair<int, int> pair : boxSplit) {
-
-		CFlat::Split* split = static_cast<CFlat::Split*>(boxes[pair.first]);
-		CFlat::IBox* alternativeBox = pair.second >= 0 ? boxes[pair.second] : nullptr;
-		split->setOtherRoute(alternativeBox);
-	}
-
-
-	scripts.emplace(file, script);
-	return script;
-}
-

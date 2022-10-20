@@ -19,9 +19,9 @@ private:
 
 	void iteration(CFlat::IBox* startingBox);
 
-	ScriptAttribute attributes;
 
 public:
+	ScriptAttribute attributes;
 
 	void setupScript(std::string script);
 
