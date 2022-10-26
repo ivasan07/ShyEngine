@@ -1,9 +1,12 @@
 #pragma once
 
+#include <vector>
 #include <unordered_map>
 #include <string>
 
 using std::string;
+
+class Output;
 
 class ScriptAttribute
 {
@@ -23,6 +26,8 @@ class ScriptAttribute
 	std::unordered_map<string, int> integers;
 	std::unordered_map<string, float> decimals;
 	std::unordered_map<string, string> strings;
+
+	std::unordered_map<string, std::vector<Output*>> arrays;
 
 public:
 

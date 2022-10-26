@@ -226,6 +226,8 @@ namespace CFlat {
 		}
 
 
+
+		//TODO: cada nodo tiene que tener su id (para facilitar la depuracion pero para la deteccion de errores)
 		//Establecer a cada nodo una referencia al script
 		for (CFlat::IBox* box : boxes) {
 

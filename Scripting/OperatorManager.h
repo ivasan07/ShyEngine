@@ -82,6 +82,7 @@ namespace CFlat {
 			void setBoolean(IBox* node);
 			void setString(IBox* node);
 
+
 		}
 
 		namespace IO {
