@@ -4,13 +4,18 @@
 namespace CFlat {
 
 
-	IBox::IBox(int op) {
+	IBox::IBox(int op, int id) {
 
 		operation = op;
 		nextBox = nullptr;
 		constOutput = true;
 
+		boxId = id;
 		output.type = ParamType::_null;
+
+		constValueOperation = "";
+
+		used = false;
 	}
 
 	IBox::~IBox()
@@ -22,21 +27,27 @@ namespace CFlat {
 		nextBox = nullptr;
 	}
 
-	void IBox::validateInput()
+	void IBox::validateInput(std::ofstream& stream)
 	{
 		for (IBox* box : input) {
-			if (!box->constOutput || box->output.type == ParamType::_null)
+			if (/*!box->constOutput || *//*box->output.type == ParamType::_null*/!box->used)
 			{
-				box->processBox();
+				box->processBox(stream);
 				constOutput &= box->constOutput;
 			}
 		}
 	}
 
-	void IBox::processBox()
+	std::string IBox::boxName()
 	{
-		validateInput();
-		OperatorManager::ProccessOperation(operation, this);
+		return "IBox_" + std::to_string(boxId);
+	}
+
+	void IBox::processBox(std::ofstream& stream)
+	{
+		validateInput(stream);
+		OperatorManager::ProccessOperation(operation, this, stream);
+		used = true;
 	}
 
 	void IBox::addInput(IBox* newInput) {

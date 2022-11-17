@@ -1,35 +1,32 @@
 #include "Script.h"
 #include "CFlat.h"
 #include "FlowManager.h"
-
-void Script::iteration(CFlat::IBox* iteration)
+#include <iostream>
+void Script::iteration(CFlat::IBox* iteration, std::ofstream& stream)
 {
     while (iteration != nullptr)
     {
-        iteration->processBox();
+        iteration->processBox(stream);
         iteration = iteration->nextBox;
     }
 }
 
 void Script::setupScript(std::string script)
 {
-    CFlat::FlowManager::ScriptInfo* scriptInputs = CFlat::FlowManager::instance->loadScript(script, this);
-
-    initBox = scriptInputs->init;
-    updateBox = scriptInputs->update;
+    CFlat::FlowManager::instance->loadScript(script, this);
 }
 
-void Script::init()
+void Script::init(std::ofstream& stream)
 {
     if (!initBox)
         return;
 
-    iteration(initBox);
+    iteration(initBox, stream);
 }
 
-void Script::update()
+void Script::update(std::ofstream& stream)
 {
     if (!updateBox)
         return;
-    iteration(updateBox);
+    iteration(updateBox, stream);
 }

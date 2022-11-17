@@ -54,12 +54,13 @@ namespace CFlat {
 	class IBox {
 
 	protected:
-		void validateInput();
+		void validateInput(std::ofstream& stream);
 
 		int operation;
+		int boxId;
 
 	public:
-		IBox(int operation);
+		IBox(int operation, int id);
 		~IBox();
 
 		bool constOutput;
@@ -68,11 +69,15 @@ namespace CFlat {
 		Output output;
 		std::vector<IBox*> input;
 
+		std::string boxName();
+		std::string constValueOperation;
 
 		Script* script;
 
-		void processBox();
+		void processBox(std::ofstream& stream);
 		void addInput(IBox* box);
+
+		bool used;
 	};
 
 }

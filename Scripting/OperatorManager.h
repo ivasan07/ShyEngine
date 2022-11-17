@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 
 
 namespace CFlat {
@@ -24,13 +25,13 @@ namespace CFlat {
 
 			OperatorCount
 		};
-		typedef void(*Funct)(IBox*);
+		typedef void(*Funct)(IBox*, std::ofstream& stream);
 
 		static Funct operations[OperatorCount];
 
 		static void Initialise();
 
-		static void ProccessOperation(int operationIdx, IBox* node);
+		static void ProccessOperation(int operationIdx, IBox* node, std::ofstream& stream);
 
 		
 	};
@@ -40,53 +41,53 @@ namespace CFlat {
 
 		namespace Control {
 
-			void If(IBox* node);
-			void Loop(IBox* node);
+			void If(IBox* node, std::ofstream& stream);
+			void Loop(IBox* node, std::ofstream& stream);
 		}
 
 		namespace Math {
 
-			void Add(IBox* node);
-			void Subtract(IBox* node);
-			void Multiply(IBox* node);
-			void Division(IBox* node);
-			void Power(IBox* node);
-			void SquareRoot(IBox* node);
-			void Mod(IBox* node);
-			void PlusOne(IBox* node);
+			void Add(IBox* node, std::ofstream& stream);
+			void Subtract(IBox* node, std::ofstream& stream);
+			void Multiply(IBox* node, std::ofstream& stream);
+			void Division(IBox* node, std::ofstream& stream);
+			void Power(IBox* node, std::ofstream& stream);
+			void SquareRoot(IBox* node, std::ofstream& stream);
+			void Mod(IBox* node, std::ofstream& stream);
+			void PlusOne(IBox* node, std::ofstream& stream);
 		};
 
 		namespace Logic {
 
-			void Equals(IBox* node);
-			void Different(IBox* node);
-			void Minor(IBox* node);
-			void Greater(IBox* node);
-			void MinorEqual(IBox* node);
-			void GreaterEqual(IBox* node);
-			void And(IBox* node);
-			void Or(IBox* node);
-			void Not(IBox* node);
+			void Equals(IBox* node, std::ofstream& stream);
+			void Different(IBox* node, std::ofstream& stream);
+			void Minor(IBox* node, std::ofstream& stream);
+			void Greater(IBox* node, std::ofstream& stream);
+			void MinorEqual(IBox* node, std::ofstream& stream);
+			void GreaterEqual(IBox* node, std::ofstream& stream);
+			void And(IBox* node, std::ofstream& stream);
+			void Or(IBox* node, std::ofstream& stream);
+			void Not(IBox* node, std::ofstream& stream);
 		}
 
 		namespace Attributes {
 
-			void getInteger(IBox* node);
-			void getDecimal(IBox* node);
-			void getBoolean(IBox* node);
-			void getString(IBox* node);
+			void getInteger(IBox* node, std::ofstream& stream);
+			void getDecimal(IBox* node, std::ofstream& stream);
+			void getBoolean(IBox* node, std::ofstream& stream);
+			void getString(IBox* node, std::ofstream& stream);
 
 
-			void setInteger(IBox* node);
-			void setDecimal(IBox* node);
-			void setBoolean(IBox* node);
-			void setString(IBox* node);
+			void setInteger(IBox* node, std::ofstream& stream);
+			void setDecimal(IBox* node, std::ofstream& stream);
+			void setBoolean(IBox* node, std::ofstream& stream);
+			void setString(IBox* node, std::ofstream& stream);
 
 
 		}
 
 		namespace IO {
-			void Print(IBox* node);
+			void Print(IBox* node, std::ofstream& stream);
 
 		};
 	}

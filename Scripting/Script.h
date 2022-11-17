@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <fstream>
 #include "ScriptAttribute.h"
 
 using std::string;
@@ -8,16 +9,17 @@ using std::string;
 namespace CFlat {
 
 	class IBox;
+	class FlowManager;
 }
 
 class Script
 {
-
+	friend CFlat::FlowManager;
 private:
 	CFlat::IBox* initBox;
 	CFlat::IBox* updateBox;
 
-	void iteration(CFlat::IBox* startingBox);
+	void iteration(CFlat::IBox* startingBox, std::ofstream& stream);
 
 
 public:
@@ -25,8 +27,8 @@ public:
 
 	void setupScript(std::string script);
 
-	void init();
+	void init(std::ofstream& stream);
 
-	void update();
+	void update(std::ofstream& stream);
 };
 

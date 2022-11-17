@@ -9,7 +9,7 @@ namespace CFlat {
 	class Split : public IBox {
 
 	public:
-		Split(int op);
+		Split(int op, int id);
 		IBox* otherRoute;
 		void setOtherRoute(IBox*);
 	};
@@ -19,11 +19,11 @@ namespace CFlat {
 
 	namespace Attributes {
 
-		IBox* createAttribute(ParamType type);
-		IBox* createFloat(float value);
-		IBox* createInt(int value);
-		IBox* createBoolean(int value);
-		IBox* createString(std::string value);
+		IBox* createAttribute(ParamType type, int id);
+		IBox* createFloat(float value, int id);
+		IBox* createInt(int value, int id);
+		IBox* createBoolean(int value, int id);
+		IBox* createString(std::string value, int id);
 	}
 }
 

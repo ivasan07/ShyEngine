@@ -5,11 +5,13 @@
 
 #include "FlowManager.h"
 
+
 using CFlat::IBox;
 
 
 
 int main() {
+
 	/*
 	*	TODO:
 	*	Variables en cada script
@@ -88,23 +90,27 @@ int main() {
 
 			 */
 
+	//TODO: ahora las variables se tienen que hacer de forma diferente porque no quiero que sean valores compilados (se tienen que leer)
+	//Entonces las variables se pueden guardar en otro archivo diferente
+
+
 
 	CFlat::OperatorManager::Initialise();
 	CFlat::FlowManager flowManager;
 
 	Script script{};
-	script.setupScript("EjemploContador");
-	script.init();
 
-	std::cout << "\n== update ==\n";
 
-	int cont = 0;
-	int iterationCount = 10;
-	while (cont < iterationCount) {
-		script.update();
-		cont++;
-	}
+	script.setupScript("NivelMireLol");
+	//script.init(output);
 
+	//Todo:
+	// 
+	// Ahora los constantes requieren un tipo de operacion nueva
+	// Para que se pinte la variable donde corresponda
+	// 
+	
+	
 
 	return 0;
 }

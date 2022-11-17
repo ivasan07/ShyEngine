@@ -48,12 +48,17 @@ void CFlat::OperatorManager::Initialise()
 
 
 
-void CFlat::OperatorManager::ProccessOperation(int operationIdx, IBox* node)
+void CFlat::OperatorManager::ProccessOperation(int operationIdx, IBox* node, std::ofstream& stream)
 {
-	operations[operationIdx](node);
+	if (operationIdx < 0) {
+		stream << node->constValueOperation;
+		return;
+	}
+
+	operations[operationIdx](node, stream);
 }
 
-void CFlat::BoxOperations::IO::Print(IBox* node)
+void CFlat::BoxOperations::IO::Print(IBox* node, std::ofstream& stream)
 {
 	Output output = node->input[0]->output;
 	switch (output.type) {
@@ -70,10 +75,12 @@ void CFlat::BoxOperations::IO::Print(IBox* node)
 	}
 
 	std::cout << std::endl;
+
+	stream << "std::cout << " << node->input[0]->boxName() << " << std::endl;\n";
 }
 
 
-void CFlat::BoxOperations::Control::If(IBox* node)
+void CFlat::BoxOperations::Control::If(IBox* node, std::ofstream& stream)
 {
 	//TODO hacer bien la condicion del if
 	//bool condition = node->input[0]->output.value.boolean;
@@ -83,9 +90,11 @@ void CFlat::BoxOperations::Control::If(IBox* node)
 	Split* split = static_cast<Split*>(node);
 
 	node->nextBox = condition ? node->output.value.box : split->otherRoute;
+
+	stream << "if(" << node->input[0]->boxName() << "){\n }";
 }
 
-void CFlat::BoxOperations::Control::Loop(IBox* node)
+void CFlat::BoxOperations::Control::Loop(IBox* node, std::ofstream& stream)
 {
 	CFlat::Split* split = static_cast<CFlat::Split*>(node);
 	CFlat::IBox* conditionNode = node->input[0];
@@ -103,12 +112,12 @@ void CFlat::BoxOperations::Control::Loop(IBox* node)
 
 		while (box != nullptr) {
 
-			box->processBox();
+			box->processBox(stream);
 			box = box->nextBox;
 		}
 
 		if (!range)
-			conditionNode->processBox();
+			conditionNode->processBox(stream);
 
 		n++;
 	}
@@ -116,7 +125,7 @@ void CFlat::BoxOperations::Control::Loop(IBox* node)
 }
 
 
-void CFlat::BoxOperations::Logic::Equals(IBox* node)
+void CFlat::BoxOperations::Logic::Equals(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_boolean;
 
@@ -134,10 +143,12 @@ void CFlat::BoxOperations::Logic::Equals(IBox* node)
 		node->output.value.boolean = node->input[0]->output.message == node->input[1]->output.message;
 		break;
 	}
+
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << "==" << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Logic::Different(IBox* node)
+void CFlat::BoxOperations::Logic::Different(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_boolean;
 
@@ -155,11 +166,13 @@ void CFlat::BoxOperations::Logic::Different(IBox* node)
 		node->output.value.boolean = node->input[0]->output.message != node->input[1]->output.message;
 		break;
 	}
+
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << "!=" << node->input[1]->boxName() << ";\n";
 }
 
 
 
-void CFlat::BoxOperations::Logic::Minor(IBox* node)
+void CFlat::BoxOperations::Logic::Minor(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_boolean;
 
@@ -171,10 +184,12 @@ void CFlat::BoxOperations::Logic::Minor(IBox* node)
 		node->output.value.boolean = node->input[0]->output.value.floatValue < node->input[1]->output.value.floatValue;
 		break;
 	}
+
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << "<" << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Logic::Greater(IBox* node)
+void CFlat::BoxOperations::Logic::Greater(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_boolean;
 
@@ -186,10 +201,11 @@ void CFlat::BoxOperations::Logic::Greater(IBox* node)
 		node->output.value.boolean = node->input[0]->output.value.floatValue > node->input[1]->output.value.floatValue;
 		break;
 	}
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << ">" << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Logic::GreaterEqual(IBox* node)
+void CFlat::BoxOperations::Logic::GreaterEqual(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_boolean;
 
@@ -201,10 +217,11 @@ void CFlat::BoxOperations::Logic::GreaterEqual(IBox* node)
 		node->output.value.boolean = node->input[0]->output.value.floatValue >= node->input[1]->output.value.floatValue;
 		break;
 	}
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << ">=" << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Logic::MinorEqual(IBox* node)
+void CFlat::BoxOperations::Logic::MinorEqual(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_boolean;
 
@@ -216,145 +233,173 @@ void CFlat::BoxOperations::Logic::MinorEqual(IBox* node)
 		node->output.value.boolean = node->input[0]->output.value.floatValue <= node->input[1]->output.value.floatValue;
 		break;
 	}
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << "<=" << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Logic::And(IBox* node) {
+void CFlat::BoxOperations::Logic::And(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_boolean;
 
 	node->output.value.boolean = node->input[0]->output.value.boolean && node->input[1]->output.value.boolean;
+
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << "&&" << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Logic::Or(IBox* node) {
+void CFlat::BoxOperations::Logic::Or(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_boolean;
 
 	node->output.value.boolean = !node->input[0]->output.value.boolean || node->input[1]->output.value.boolean;
+	stream << "bool " << node->boxName() << " = " << node->input[0]->boxName() << "||" << node->input[1]->boxName() << ";\n";
 }
 
-void CFlat::BoxOperations::Logic::Not(IBox* node) {
+
+void CFlat::BoxOperations::Logic::Not(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_boolean;
 
 	node->output.value.boolean = !node->input[0]->output.value.boolean;
+	stream << "bool " << node->boxName() << " = !" << node->input[0]->boxName() << ";\n";
 }
 
 
 
-void CFlat::BoxOperations::Attributes::getInteger(IBox* node) {
+void CFlat::BoxOperations::Attributes::getInteger(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_int;
 	node->script->attributes.retreiveAttribute(node->input[0]->output.message, node->output.value.intValue);
 	node->constOutput = false;
+
+	//TODO hacer enteros
+	stream << "int " << node->boxName() << " = " << node->input[0]->output.message << ";\n";
 }
 
-void CFlat::BoxOperations::Attributes::getDecimal(IBox* node) {
+void CFlat::BoxOperations::Attributes::getDecimal(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_float;
 	node->script->attributes.retreiveAttribute(node->input[0]->output.message, node->output.value.floatValue);
 	node->constOutput = false;
+
+
+	stream << "float " << node->boxName() << " = " << node->input[0]->output.message << ";\n";
 }
 
-void CFlat::BoxOperations::Attributes::getBoolean(IBox* node) {
+void CFlat::BoxOperations::Attributes::getBoolean(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_boolean;
 	node->script->attributes.retreiveAttribute(node->input[0]->output.message, node->output.value.boolean);
 	node->constOutput = false;
+	stream << "bool " << node->boxName() << " = " << node->input[0]->output.message << ";\n";
 }
 
-void CFlat::BoxOperations::Attributes::getString(IBox* node) {
+void CFlat::BoxOperations::Attributes::getString(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_string;
 	node->script->attributes.retreiveAttribute(node->input[0]->output.message, node->output.message);
 	node->constOutput = false;
+	stream << "std::string " << node->boxName() << " = " << node->input[0]->output.message << ";\n";
 }
 
 
 
-void CFlat::BoxOperations::Attributes::setInteger(IBox* node) {
+void CFlat::BoxOperations::Attributes::setInteger(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_null;
 
 	node->script->attributes.updateAttribute(
 		node->input[0]->output.message,
 		node->input[1]->output.value.intValue
 	);
+	stream << node->input[0]->output.message << " = " << node->input[1]->boxName() << ";\n";
 }
 
-void CFlat::BoxOperations::Attributes::setDecimal(IBox* node) {
+void CFlat::BoxOperations::Attributes::setDecimal(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_null;
 
 	node->script->attributes.updateAttribute(
 		node->input[0]->output.message,
 		node->input[1]->output.value.floatValue
 	);
+
+	stream << node->input[0]->output.message << " = " << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Attributes::setBoolean(IBox* node) {
+void CFlat::BoxOperations::Attributes::setBoolean(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_null;
 
 	node->script->attributes.updateAttribute(
 		node->input[0]->output.message,
 		node->input[1]->output.value.boolean
 	);
+	stream << node->input[0]->output.message << " = " << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Attributes::setString(IBox* node) {
+void CFlat::BoxOperations::Attributes::setString(IBox* node, std::ofstream& stream) {
 	node->output.type = ParamType::_null;
 
 	node->script->attributes.updateAttribute(
 		node->input[0]->output.message,
 		node->input[1]->output.message
 	);
+	stream << node->input[0]->output.message << " = " << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Math::Add(IBox* node)
+void CFlat::BoxOperations::Math::Add(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_float;
 	node->output.value.floatValue = node->input[0]->output.value.floatValue + node->input[1]->output.value.floatValue;
+	stream << "float " << node->boxName() << " = " << node->input[0]->boxName() << " + " << node->input[1]->boxName() << ";\n";
 }
 
-void CFlat::BoxOperations::Math::Subtract(IBox* node)
+void CFlat::BoxOperations::Math::Subtract(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_float;
 	node->output.value.floatValue = node->input[0]->output.value.floatValue - node->input[1]->output.value.floatValue;
+	stream << "float " << node->boxName() << " = " << node->input[0]->boxName() << " - " << node->input[1]->boxName() << ";\n";
 }
 
-void CFlat::BoxOperations::Math::Multiply(IBox* node)
+void CFlat::BoxOperations::Math::Multiply(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_float;
 	node->output.value.floatValue = node->input[0]->output.value.floatValue * node->input[1]->output.value.floatValue;
+	stream << "float " << node->boxName() << " = " << node->input[0]->boxName() << " * " << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Math::Division(IBox* node)
+void CFlat::BoxOperations::Math::Division(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_float;
 	node->output.value.floatValue = node->input[0]->output.value.floatValue / node->input[1]->output.value.floatValue;
+	stream << "float " << node->boxName() << " = " << node->input[0]->boxName() << " / " << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Math::Power(IBox* node)
+void CFlat::BoxOperations::Math::Power(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_float;
 	node->output.value.floatValue = powf(node->input[0]->output.value.floatValue, node->input[1]->output.value.floatValue);
+	stream << "float " << node->boxName() << " = powf(" << node->input[0]->boxName() << ", " << node->input[1]->boxName() << ");\n";
 }
 
 
 
-void CFlat::BoxOperations::Math::SquareRoot(IBox* node)
+void CFlat::BoxOperations::Math::SquareRoot(IBox* node, std::ofstream& stream)
 {
 	node->output.type = ParamType::_float;
 	node->output.value.floatValue = sqrtf(node->input[0]->output.value.floatValue);
+
+	stream << "float " << node->boxName() << " = sqrtf(" << node->input[0]->boxName() << ");\n";
 }
 
 
 
-void CFlat::BoxOperations::Math::Mod(IBox* node)
+void CFlat::BoxOperations::Math::Mod(IBox* node, std::ofstream& stream)
 {
+	//TODO el mod esta como float
 	node->output.type = ParamType::_float;
-	node->output.value.floatValue = node->input[0]->output.value.floatValue * node->input[1]->output.value.floatValue;
+	node->output.value.floatValue = (int)node->input[0]->output.value.floatValue % (int)node->input[1]->output.value.floatValue;
+	stream << "int " << node->boxName() << " = " << node->input[0]->boxName() << " % " << node->input[1]->boxName() << ";\n";
 }
 
 
-void CFlat::BoxOperations::Math::PlusOne(IBox* node)
+void CFlat::BoxOperations::Math::PlusOne(IBox* node, std::ofstream& stream)
 {
 	if (node->input[0]->output.type == ParamType::_float) {
 		node->output.type = ParamType::_float;
@@ -365,6 +410,8 @@ void CFlat::BoxOperations::Math::PlusOne(IBox* node)
 		node->output.type = ParamType::_int;
 		node->output.value.intValue = node->input[0]->output.value.intValue + 1;
 	}
+
+	stream << "int " << node->boxName() << " = " << node->input[0]->boxName() << " + 1" << ";\n";
 }
 
 

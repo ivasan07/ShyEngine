@@ -5,6 +5,8 @@
 #include "CFlatBasics.h"
 #include "Script.h"
 
+#include <fstream>
+
 using nlohmann::json;
 using std::string;
 using jsonarray = std::vector<json>;
@@ -26,7 +28,6 @@ namespace CFlat {
 	FlowManager::ScriptInfo* FlowManager::loadScript(string file, Script* script)
 	{
 		//TODO: separar este metodo que es un poco enorme en cachitos mas aceptables
-		
 
 		//Antes de inicializar el script comprobamos que no exista de antes
 		{
@@ -44,6 +45,8 @@ namespace CFlat {
 			std::cout << "El archivo no existe";
 			return nullptr;
 		}
+		std::ofstream output("Hola.txt");
+		output << "#pragma once\n#include<iostream>\n#include<string>\n\n";
 
 		json data = json::parse(f);
 
@@ -87,17 +90,17 @@ namespace CFlat {
 
 				case 'f':
 
-					boxes[id] = CFlat::Attributes::createFloat(in["value"].get<float>());
+					boxes[id] = CFlat::Attributes::createFloat(in["value"].get<float>(), id);
 					break;
 
 				case 'i':
 
-					boxes[id] = CFlat::Attributes::createInt(in["value"].get<int>());
+					boxes[id] = CFlat::Attributes::createInt(in["value"].get<int>(), id);
 					break;
 
 				case 's':
 
-					boxes[id] = CFlat::Attributes::createString(in["value"].get<std::string>());
+					boxes[id] = CFlat::Attributes::createString(in["value"].get<std::string>(), id);
 					break;
 				}
 			}
@@ -127,7 +130,7 @@ namespace CFlat {
 						boxInput[id].push_back(oi.get<int>());
 				}
 
-				boxes[id] = new CFlat::IBox(type);
+				boxes[id] = new CFlat::IBox(type, id);
 			}
 		}
 
@@ -152,7 +155,7 @@ namespace CFlat {
 
 				int alternativeBox = cond.contains("alter") ? cond["alter"].get<int>() : -1;
 				boxSplit.push_back(std::make_pair(id, alternativeBox));
-				boxes[id] = new CFlat::Split(type);
+				boxes[id] = new CFlat::Split(type, id);
 			}
 		}
 		/*
@@ -168,25 +171,38 @@ namespace CFlat {
 
 				for (json i : integer) {
 
-					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<int>());
+					std::string name = i["name"].get<std::string>();
+					int value = i["value"].get<int>();
+
+					output << "int " << name << " = " << std::to_string(value) << ";\n";
+					script->attributes.generateAttribute(name, value);
 				}
 			}
 
 			if (attributes.contains("decimal")) {
-				jsonarray integer = attributes["decimal"].get<jsonarray>();
+				jsonarray decimals = attributes["decimal"].get<jsonarray>();
 
-				for (json i : integer) {
+				for (json i : decimals) {
 
-					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<float>());
+					std::string name = i["name"].get<std::string>();
+					float value = i["value"].get<float>();
+
+					output << "float " << name << " = " << std::to_string(value) << ";\n";
+					script->attributes.generateAttribute(name, value);
 				}
 			}
 
 			if (attributes.contains("boolean")) {
-				jsonarray integer = attributes["boolean"].get<jsonarray>();
+				jsonarray booleans = attributes["boolean"].get<jsonarray>();
 
-				for (json i : integer) {
+				for (json i : booleans) {
+					
+					std::string name = i["name"].get<std::string>();
+					bool value = i["value"].get<bool>();
 
-					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<bool>());
+					output << "bool " << name << " = " << std::to_string(value) << ";\n";
+
+					script->attributes.generateAttribute(name, value);
 				}
 			}
 
@@ -195,7 +211,12 @@ namespace CFlat {
 
 				for (json i : integer) {
 
-					script->attributes.generateAttribute(i["name"].get<std::string>(), i["value"].get<std::string>());
+					std::string name = i["name"].get<std::string>();
+					std::string value = i["value"].get<std::string>();
+
+					output << "bool " << name << " = \"" << value << "\";\n";
+
+					script->attributes.generateAttribute(name, value);
 				}
 			}
 		}
@@ -240,24 +261,29 @@ namespace CFlat {
 		/*
 		*  Lectura de los puntos de entrada en el programa
 		*/
-		ScriptInfo* scriptInfo = new ScriptInfo{ nullptr, nullptr };
 
 		if (data.contains("init")) {
 			int initid = data["init"].get<int>();
 			if (initid >= 0)
-				scriptInfo->init = boxes[initid];
+				script->initBox = boxes[initid];
 		}
 
 		if (data.contains("update")) {
 			int updateid = data["update"].get<int>();
 			if (updateid >= 0)
-				scriptInfo->update = boxes[updateid];
+				script->updateBox = boxes[updateid];
 		}
+	
+
+		//scripts.emplace(file, scriptInfo);
+		output << "int main(){\n\n";
 
 
+		script->init(output);
 
-		scripts.emplace(file, scriptInfo);
-		return scriptInfo;
+		output << "}";
+		output.close();
+		return nullptr;
 	}
 
 }
