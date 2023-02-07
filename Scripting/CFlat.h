@@ -50,32 +50,39 @@ namespace CFlat {
 		ParamType type;
 	};
 
-
+	/*
+	*	Clase que representa cada nodo del script
+	*/
 	class IBox {
 
 	protected:
+		/*
+		*	Comprueba si los nodos de entrada ya tienen su correspondiente output generado
+		*/
 		void validateInput(std::ofstream& stream);
 
-		int operation;
-		int boxId;
+		int operation;	//Indice de operacion
+		int boxId;		//Id que representa al nodo
 
 	public:
 		IBox(int operation, int id);
 		~IBox();
 
-		bool constOutput;
+		bool constOutput;	//Determina si la entrada es un valor constante (en caso de ser constante no tiene que ser ejecutada en cada ciclo)
 
-		IBox* nextBox;
-		Output output;
-		std::vector<IBox*> input;
+		IBox* nextBox;		//Siguiente nodo a ejecutarse
+		Output output;		//Output del nodo
+		std::vector<IBox*> input;	//Vector con los nodos de entrada
 
-		std::string boxName();
+		std::string boxName();	//Metodo que devuelve el nombre del nodo
+
+		//	String con la inicializacion de una variable para convertir el nodo en codigo c++
 		std::string constValueOperation;
 
-		Script* script;
+		Script* script;		//Puntero al script
 
-		void processBox(std::ofstream& stream);
-		void addInput(IBox* box);
+		void processBox(std::ofstream& stream);		//Procesa el nodo y calcula el output
+		void addInput(IBox* box);					//Añade un nuevo input al nodo
 
 		bool used;
 	};

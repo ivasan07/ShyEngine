@@ -8,8 +8,6 @@
 
 using CFlat::IBox;
 
-
-
 int main() {
 
 	/*

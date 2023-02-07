@@ -30,7 +30,14 @@ namespace CFlat {
 	void IBox::validateInput(std::ofstream& stream)
 	{
 		for (IBox* box : input) {
-			if (/*!box->constOutput || *//*box->output.type == ParamType::_null*/!box->used)
+
+			/*	TODO:
+				
+				*Estas comprobaciones tienen que mejorarse para asegurarse que funcione correctamente
+				* 
+				* Distinguir cuando se este ejecutando para generar una build o cuando se use en ejecucion
+			*/
+			if (!box->constOutput || box->output.type == ParamType::_null) //!box->used//)
 			{
 				box->processBox(stream);
 				constOutput &= box->constOutput;

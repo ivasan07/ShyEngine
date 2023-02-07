@@ -25,10 +25,16 @@ private:
 public:
 
 	struct method {
-		std::string className;
 		std::string output;
 		std::string name;
 		std::vector<std::pair<std::string, std::string>> params;
+	};
+
+
+	struct classDef {
+
+		std::string className;
+		std::vector<method> methods;
 	};
 
 	static std::vector<method> getMethods(std::string const& file) {
