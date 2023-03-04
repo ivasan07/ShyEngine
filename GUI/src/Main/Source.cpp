@@ -4,7 +4,11 @@
 #include "Scene.h"
 #include "Image.h"
 #include "MenuBar.h"
+#include "ScriptingManager.h"
+/*TODO
 
+	*Abstraer implementacion de vector2 de imgui a una nuestra propia
+*/
 
 int main(int, char**)
 {
@@ -27,6 +31,11 @@ int main(int, char**)
 	scene->addImage("test1.jpg");
 
 	imGUIManager->addWindow(sceneWindow);
+
+	Scripting::ScriptingManager* manager = new Scripting::ScriptingManager();
+
+	sceneWindow->addComponent(manager);
+
 
 	imGUIManager->loop();
 }
